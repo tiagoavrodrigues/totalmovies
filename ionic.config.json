@@ -1,0 +1,7 @@
+{
+  "name": "totalmovies",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
