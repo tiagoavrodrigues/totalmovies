@@ -11,7 +11,7 @@ import { AbstractControl, EmailValidator, FormBuilder, FormGroup, Validators } f
 })
 export class SignupPage implements OnInit {
 
-  user : User;
+  newUser : User;
   confirmPassword: string;
 
   isLoadingUsers: boolean;
@@ -20,7 +20,7 @@ export class SignupPage implements OnInit {
 
   constructor(private supabaseService: SupabaseService, private formBuilder: FormBuilder) {
     
-    this.user = {
+    this.newUser = {
       email: '',
       password: '',
       name: ''
@@ -39,14 +39,14 @@ export class SignupPage implements OnInit {
     );
   }
 
-  onSubmit(){
+  async onSubmit(){
     if (this.signupForm.valid) {
-      this.user = {
+      this.newUser = {
         email: this.signupForm.get('email')!.value,
         password: this.signupForm.get('password')!.value,
         name: this.signupForm.get('name')!.value
       }
-      this.supabaseService.insertUser(this.user);
+      await this.supabaseService.insertUser(this.newUser);
     } else {
       // marcar todos os campos como tocados para exibição das mensagens de erro
       Object.values(this.signupForm.controls).forEach(control => {
