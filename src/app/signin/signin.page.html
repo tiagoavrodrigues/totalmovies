@@ -18,18 +18,36 @@
       <ion-col size="12" size-md="6" size-lg="4" class="ion-text-center vertical-stack">
         <img src="/assets/images/logo.png" class="form-logo" />
 
-        <ion-card style="margin:0px">
-          <ion-card-content>
-            <ion-input class="ion-margin-top" label="Email" labelPlacement="stacked" type="email" placeholder="email@domain.com" fill="outline"></ion-input>
-            <ion-input class="ion-margin-top" label="Confirm Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
-            <ion-button expand="block" class="ion-margin-top">SIGN IN</ion-button>
-            <br>
-            <ion-text class="ion-margin-top">
-              Don't have an account?
-              <u><a routerLink="/signup" class="black-link">Sign up</a></u>
-            </ion-text>
-          </ion-card-content>
-        </ion-card>
+        <form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
+          <ion-card style="margin:0px">
+            <ion-card-content>
+
+              <ion-input formControlName="email" class="ion-margin-top" label="Email" labelPlacement="stacked" type="email" placeholder="email@domain.com" fill="outline"></ion-input>
+              <ion-text color="danger" *ngIf="signinForm.get('email')!.invalid && (signinForm.get('email')!.touched || signinForm.get('email')!.dirty)">
+                <small *ngIf="signinForm.get('email')!.errors?.['required']">
+                  Email is required
+                </small>
+              </ion-text>
+
+              <ion-input formControlName="password" class="ion-margin-top" label="Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
+              <ion-text color="danger" *ngIf="(signinForm.get('password')!.touched || signinForm.get('password')!.dirty)">
+                <small *ngIf="signinForm.get('password')!.errors?.['required']">
+                  Password is required
+                </small>
+              </ion-text>
+
+              <ion-text color="danger" *ngIf="loginError">
+                <small>{{ loginError }}</small>
+              </ion-text>
+              <ion-button type="submit" expand="block" class="ion-margin-top">SIGN IN</ion-button>
+              <br>
+              <ion-text class="ion-margin-top">
+                Don't have an account?
+                <u><a routerLink="/signup" class="black-link">Sign up</a></u>
+              </ion-text>
+            </ion-card-content>
+          </ion-card>
+        </form> 
       </ion-col>
     </ion-row>
   </ion-grid>
