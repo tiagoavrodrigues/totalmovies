@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>signup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding center-content">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">register</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-grid class="full-height">
+    <ion-row class="ion-justify-content-center ion-align-items-center full-height">
+      <ion-col size="12" size-md="6" size-lg="4" class="ion-text-center vertical-stack">
+        <img src="/assets/images/logo.png" class="form-logo" />
+
+        <ion-card style="margin:0px">
+          <ion-card-content>
+            <ion-input class="ion-margin-top" label="Name" labelPlacement="stacked" type="text" placeholder="Full Name" fill="outline"></ion-input>
+            <ion-input class="ion-margin-top" label="Email" labelPlacement="stacked" type="email" placeholder="email@domain.com" fill="outline"></ion-input>
+            <ion-input class="ion-margin-top" label="Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
+            <ion-input class="ion-margin-top" label="Confirm Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
+            <ion-button expand="block" class="ion-margin-top">SIGN UP</ion-button>
+            <br>
+            <ion-text class="ion-margin-top">
+              Already have an account?
+              <u><a routerLink="/signin" class="black-link">Sign in</a></u>
+            </ion-text>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
