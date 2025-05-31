@@ -20,14 +20,14 @@
 
         <ion-card style="margin:0px">
           <ion-card-content>
-            <ion-input class="ion-margin-top" label="Name" labelPlacement="stacked" type="text" placeholder="Full Name" fill="outline"></ion-input>
-            <ion-input class="ion-margin-top" label="Email" labelPlacement="stacked" type="email" placeholder="email@domain.com" fill="outline"></ion-input>
-            <ion-input class="ion-margin-top" label="Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
-            <ion-input class="ion-margin-top" label="Confirm Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
-            <ion-button expand="block" class="ion-margin-top">SIGN UP</ion-button>
+            <ion-input [(ngModel)]="user.name" class="ion-margin-top" label="Name" labelPlacement="stacked" type="text" placeholder="Full Name" fill="outline"></ion-input>
+            <ion-input [(ngModel)]="user.email" class="ion-margin-top" label="Email" labelPlacement="stacked" type="email" placeholder="email@domain.com" fill="outline"></ion-input>
+            <ion-input [(ngModel)]="user.password" class="ion-margin-top" label="Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
+            <ion-input [(ngModel)]="confirmPassword" class="ion-margin-top" label="Confirm Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
+            <ion-button (click)="insertUser(user)" expand="block" class="ion-margin-top">SIGN UP</ion-button>
             <br>
             <ion-text class="ion-margin-top">
-              Already have an account?
+              Already have an account? {{ test.email }}
               <u><a routerLink="/signin" class="black-link">Sign in</a></u>
             </ion-text>
           </ion-card-content>
