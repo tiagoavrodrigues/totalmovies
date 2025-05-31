@@ -18,20 +18,65 @@
       <ion-col size="12" size-md="6" size-lg="4" class="ion-text-center vertical-stack">
         <img src="/assets/images/logo.png" class="form-logo" />
 
-        <ion-card style="margin:0px">
-          <ion-card-content>
-            <ion-input [(ngModel)]="user.name" class="ion-margin-top" label="Name" labelPlacement="stacked" type="text" placeholder="Full Name" fill="outline"></ion-input>
-            <ion-input [(ngModel)]="user.email" class="ion-margin-top" label="Email" labelPlacement="stacked" type="email" placeholder="email@domain.com" fill="outline"></ion-input>
-            <ion-input [(ngModel)]="user.password" class="ion-margin-top" label="Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
-            <ion-input [(ngModel)]="confirmPassword" class="ion-margin-top" label="Confirm Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
-            <ion-button (click)="insertUser(user)" expand="block" class="ion-margin-top">SIGN UP</ion-button>
-            <br>
-            <ion-text class="ion-margin-top">
-              Already have an account? {{ test.email }}
-              <u><a routerLink="/signin" class="black-link">Sign in</a></u>
-            </ion-text>
-          </ion-card-content>
-        </ion-card>
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()"> 
+          <ion-card style="margin:0px">
+            <ion-card-content>
+
+              <ion-input formControlName="name" class="ion-margin-top" label="Name" labelPlacement="stacked" type="text" placeholder="Full Name" fill="outline"></ion-input>
+              <ion-text color="danger" *ngIf="signupForm.get('name')!.invalid && (signupForm.get('name')!.touched || signupForm.get('name')!.dirty)">
+                <small *ngIf="signupForm.get('name')!.errors?.['required']">
+                  Name is required
+                </small>
+                <small *ngIf="signupForm.get('name')!.errors?.['minlength']">
+                  Name must be at least 2 characters long
+                </small>
+              </ion-text>
+
+              <ion-input formControlName="email" class="ion-margin-top" label="Email" labelPlacement="stacked" type="email" placeholder="email@domain.com" fill="outline"></ion-input>
+              <ion-text color="danger" *ngIf="signupForm.get('email')!.invalid && (signupForm.get('email')!.touched || signupForm.get('email')!.dirty) || signupForm.errors?.['emailTaken']">
+                <small *ngIf="signupForm.get('email')!.errors?.['required']">
+                  Email is required
+                </small>
+                <small *ngIf="signupForm.get('email')!.errors?.['email']">
+                  Please enter a valid email address
+                </small>
+                <small *ngIf="signupForm.get('email')?.errors?.['emailTaken']">
+                  This email is already in use.
+                </small>
+              </ion-text>
+
+              <ion-input formControlName="password" class="ion-margin-top" label="Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
+              <ion-text color="danger" *ngIf="(signupForm.get('password')!.touched || signupForm.get('password')!.dirty)">
+                <small *ngIf="signupForm.get('password')!.errors?.['required']">
+                  Password is required
+                </small>
+                <small *ngIf="signupForm.get('password')!.errors?.['minlength']">
+                  Password must be at least 5 characters long
+                </small>
+              </ion-text>
+
+              <ion-input formControlName="confirmPassword" class="ion-margin-top" label="Confirm Password" labelPlacement="stacked" type="password" placeholder="Password" fill="outline"></ion-input>
+              <ion-text color="danger" *ngIf="(signupForm.get('confirmPassword')!.touched || signupForm.get('confirmPassword')!.dirty) || signupForm.errors?.['passwordMismatch']">
+                <small *ngIf="signupForm.get('confirmPassword')!.errors?.['required']">
+                  Confirmation password is required
+                </small>
+                <small *ngIf="signupForm.get('confirmPassword')!.errors?.['minlength']">
+                  Confirmation password must be at least 5 characters long
+                </small>
+                <small *ngIf="signupForm.errors?.['passwordMismatch'] && (signupForm.get('confirmPassword')!.dirty || signupForm.get('confirmPassword')!.touched)">
+                  Passwords do not match
+                </small>
+              </ion-text>
+
+              <ion-button type="submit" expand="block" class="ion-margin-top">SIGN UP</ion-button>
+              <br>
+              <ion-text class="ion-margin-top">
+                Already have an account?
+                <a routerLink="/signin" class="black-link">Sign in</a>
+              </ion-text>
+            </ion-card-content>
+          </ion-card>
+        </form> 
       </ion-col>
     </ion-row>
   </ion-grid>

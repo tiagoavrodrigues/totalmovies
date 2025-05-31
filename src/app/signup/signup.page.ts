@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../services/user';
 import { SupabaseService } from '../services/supabase.service';
+import { AbstractControl, EmailValidator, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-signup',
@@ -12,43 +13,89 @@ export class SignupPage implements OnInit {
 
   user : User;
   confirmPassword: string;
-  test: User;  
 
   isLoadingUsers: boolean;
 
-  constructor(private supabaseService: SupabaseService) {
+  public signupForm: FormGroup;
+
+  constructor(private supabaseService: SupabaseService, private formBuilder: FormBuilder) {
+    
     this.user = {
       email: '',
       password: '',
       name: ''
     }
+
     this.confirmPassword = '';
     this.isLoadingUsers = false;
-    this.test = {
-      email: '',
-      password: '',
-      name: ''
+
+    this.signupForm = this.formBuilder.group({
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email], [this.emailTakenValidator.bind(this)]], // "this" vai-se referir a este componente dentro da funcao
+      password: ['', [Validators.required, Validators.minLength(5)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(5)]],
+    },
+    { validators: this.passwordMatchValidator }
+    );
+  }
+
+  onSubmit(){
+    if (this.signupForm.valid) {
+      this.user = {
+        email: this.signupForm.get('email')!.value,
+        password: this.signupForm.get('password')!.value,
+        name: this.signupForm.get('name')!.value
+      }
+      this.supabaseService.insertUser(this.user);
+    } else {
+      // marcar todos os campos como tocados para exibição das mensagens de erro
+      Object.values(this.signupForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
     }
   }
 
-  async getUser(email: string){
+private emailTakenValidator(fromControl: AbstractControl): Promise<{ emailTaken: boolean } | null> { //Promise == async
+  const email = fromControl.value?.trim();
+  if (!email) return Promise.resolve(null);
+
+  return this.supabaseService.getUserByEmail(email)
+    .then(user => user ? { emailTaken: true } : null)
+    .catch(() => null); // ignore Supabase errors
+}
+
+  private passwordMatchValidator(formGroup: AbstractControl): { [key: string]: boolean } | null {
+    const password = formGroup.get('password')?.value;
+    const confirmPassword = formGroup.get('confirmPassword')?.value;
+
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  }
+
+  private async getUser(email: string){
     this.isLoadingUsers = true;
     var user = await this.supabaseService.getUserByEmail(email);
     this.isLoadingUsers = false;
     return user;
   }
 
-  async insertUser(user: User) {
-    console.log('User to insert:', JSON.stringify(user, null, 2));
+  private async insertUser(user: User) {
     await this.supabaseService.insertUser(user);
   }
 
-  async loadTestUser() {
-    this.test = await this.getUser('admin@example.com');
+  ngOnInit() {
   }
 
-  ngOnInit() {
-    this.loadTestUser();
+  ionViewWillLeave() {
+    this.signupForm.reset();
+    Object.values(this.signupForm.controls).forEach(control => {
+      control.setErrors(null);
+      control.markAsPristine();
+      control.markAsUntouched();
+      control.updateValueAndValidity();
+    });
+
+    this.signupForm.updateValueAndValidity();
+    this.signupForm.reset();
   }
 
 }
