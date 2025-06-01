@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../services/user';
+import { User, Session } from '../services/user';
 import { SupabaseService } from '../services/supabase.service';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SessionService } from '../services/session.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
@@ -11,24 +13,17 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 })
 export class SigninPage implements OnInit {
 
-  user: User;
+  user: User | null = null;
 
   public signinForm: FormGroup;
   loginError: string | null = null;
 
-
-  constructor(private supabaseService: SupabaseService, private formBuilder: FormBuilder) { 
-    this.user = {
-      email: '',
-      password: '',
-      name: '',
-    };
-
+  constructor(private router: Router, private supabaseService: SupabaseService, private formBuilder: FormBuilder, private sessionService: SessionService) { 
     this.signinForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
-
+    
   }
 
   private async authenticate(email: string, password: string): Promise<boolean> {
@@ -44,7 +39,12 @@ export class SigninPage implements OnInit {
     if (this.signinForm.valid) {
       var result = await this.authenticate(this.signinForm.get('email')?.value, this.signinForm.get('password')?.value)
       if(result){
-        this.loginError = 'Nice :)';
+        this.sessionService.createSession({
+          id: this.user!.id,
+          email: this.user!.email,
+          name: this.user!.name
+        });
+        this.router.navigateByUrl('/folder/inbox');
       } else {
         this.loginError = 'Invalid email or password';
       }
@@ -56,7 +56,21 @@ export class SigninPage implements OnInit {
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.sessionService.loadSession();
   }
 
+
+    ionViewWillLeave() {
+    this.signinForm.reset();
+    Object.values(this.signinForm.controls).forEach(control => {
+      control.setErrors(null);
+      control.markAsPristine();
+      control.markAsUntouched();
+      control.updateValueAndValidity();
+    });
+
+    this.signinForm.updateValueAndValidity();
+    this.signinForm.reset();
+  }
 }
