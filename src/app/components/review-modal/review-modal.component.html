@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Write a Review</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <h3><ion-label position="stacked">{{ user?.name }}</ion-label></h3>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Your Review</ion-label>
+    <ion-textarea [(ngModel)]="review.review"></ion-textarea>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Rating</ion-label>
+    <ion-buttons>
+      <ion-button *ngFor="let r of [1,2,3,4,5]" 
+                  fill="clear" 
+                  (click)="setRating(r)">
+        <ion-icon 
+          [name]="review.rating >= r ? 'star' : 'star-outline'" 
+          color="warning">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item>
+
+  <ion-button expand="block" (click)="submit()">Submit Review</ion-button>
+</ion-content>
