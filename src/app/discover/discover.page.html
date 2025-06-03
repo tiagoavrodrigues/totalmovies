@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>toprated</ion-title>
+    <div class="logo-container">
+      <ion-img 
+        src="assets/images/logos/logo.png" 
+        alt="ToltaMovies - Busca Filmes" 
+        class="logo-image">
+      </ion-img>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Top Rated</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="chip-scroll-wrapper">
+    <div class="chip-scroll">
+      <ion-chip
+      (click)="filterByGenre(null)"
+      [style.--background]="!selectedGenreId ? 'rgb(224, 224, 224)' : 'rgba(0, 0, 0, 0.9)'"
+      [style.--color]="!selectedGenreId ? 'black' : 'rgb(224, 224, 224)'"
+      [style.font-weight]="!selectedGenreId ? 'bold' : 'normal'">
+      Top Rated
+    </ion-chip>
+
+    <ion-chip
+      *ngFor="let genre of genres"
+      (click)="filterByGenre(genre.id)"
+      [style.--background]="selectedGenreId === genre.id ? 'rgb(224, 224, 224)' : 'rgba(0, 0, 0, 0.9)'"
+      [style.--color]="selectedGenreId === genre.id ? 'black' : 'rgb(224, 224, 224)'"
+      [style.font-weight]="selectedGenreId === genre.id ? 'bold' : 'normal'">
+      {{ genre.name }}
+    </ion-chip>
+    </div>
+  </div>
+  
+  <ion-grid>
+    <ion-row *ngFor="let movie of movies">
+      <ion-col size="12">
+          <app-movie-card *ngIf="movie" [movie]="movie" [showMeta]="false" [showReviews]="false"></app-movie-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingText="Please wait..." loadingSpinner="bubbles"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content> 
+
