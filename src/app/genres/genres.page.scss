@@ -1,0 +1,14 @@
+.genre-card {
+  height: 250px; /* Adjust as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.genre-card img {
+  height: 200px; /* Adjust for image space */
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}

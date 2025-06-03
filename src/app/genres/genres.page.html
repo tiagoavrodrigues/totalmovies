@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>genres</ion-title>
+    <div class="logo-container">
+      <ion-img 
+        src="assets/images/logos/logo.png" 
+        alt="ToltaMovies - Busca Filmes" 
+        class="logo-image">
+      </ion-img>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">genres</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-grid>
+  <ion-row>
+
+    <ion-col size="12">
+      <ion-card class="genre-card" (click)="goToGenre(null)">
+        <img src="assets/images/genres/toprated.jpg" alt="Top Rated image" />
+        <ion-card-header>
+          <ion-card-title>Top Rated</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-col>
+
+    <ion-col size="12" *ngFor="let genre of genres">
+      <ion-card class="genre-card" (click)="goToGenre(genre.id)">
+        <img [src]="formatGenreImageName(genre.name)" [alt]="genre.name + ' image'" />
+        <ion-card-header>
+          <ion-card-title>{{ genre.name }}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+</ion-content>
