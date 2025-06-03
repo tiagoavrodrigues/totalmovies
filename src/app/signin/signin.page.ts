@@ -44,7 +44,7 @@ export class SigninPage implements OnInit {
           email: this.user!.email,
           name: this.user!.name
         });
-        this.router.navigateByUrl('/folder/inbox');
+        this.router.navigateByUrl('/genres');
       } else {
         this.loginError = 'Invalid email or password';
       }
@@ -58,6 +58,7 @@ export class SigninPage implements OnInit {
 
   async ngOnInit() {
     await this.sessionService.loadSession();
+    if (this.sessionService.hasSession()) this.router.navigateByUrl('/genres');
   }
 
 

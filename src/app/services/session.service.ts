@@ -9,7 +9,8 @@ import { Session } from './user';
 export class SessionService {
   session: Session | null = null;
 
-  constructor(private storage: Storage) { }
+  constructor(private storage: Storage) {
+  }
 
   async loadSession(){
     await this.storage.defineDriver(CordovaSQLiteDriver);
@@ -18,6 +19,7 @@ export class SessionService {
     if(session){
       this.session = session;
     }
+    console.log('sessionId: ' + this.session?.id);
   }
 
 async createSession(session: Session) {
@@ -35,5 +37,9 @@ async createSession(session: Session) {
 
   getSession(){
     return this.session;
+  }
+
+  hasSession(): boolean {
+    return !!this.session?.email;
   }
 }
