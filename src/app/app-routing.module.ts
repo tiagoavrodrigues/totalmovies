@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'folder/inbox',
+    redirectTo: '/genres',
     pathMatch: 'full'
   },
   {
@@ -18,6 +18,30 @@ const routes: Routes = [
   {
     path: 'signin',
     loadChildren: () => import('./signin/signin.module').then( m => m.SigninPageModule)
+  },
+  {
+    path: 'test/:id',
+    loadChildren: () => import('./test/test.module').then( m => m.TestPageModule)
+  },
+  {
+    path: 'genres',
+    loadChildren: () => import('./genres/genres.module').then( m => m.GenresPageModule)
+  },
+  {
+    path: 'discover',
+    loadChildren: () => import('./discover/discover.module').then( m => m.DiscoverPageModule)
+  },
+  {
+    path: 'discover/:genreId',
+    loadChildren: () => import('./discover/discover.module').then( m => m.DiscoverPageModule)
+  },
+  {
+    path: 'movieinfo/:movieId',
+    loadChildren: () => import('./movieinfo/movieinfo.module').then( m => m.MovieinfoPageModule)
+  },
+  {
+    path: 'lists/:listType',
+    loadChildren: () => import('./lists/lists.module').then( m => m.ListsPageModule)
   }
 ];
 
