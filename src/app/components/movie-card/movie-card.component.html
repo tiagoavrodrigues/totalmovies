@@ -1,0 +1,115 @@
+<ng-container *ngIf="!isLoading; else skeletonCard">
+  <ion-card *ngIf="movie">
+    <img [src]="imgBaseUrl + movie.poster_path" *ngIf="movie.poster_path" alt="{{ movie.title }} poster" (click)="goToMovieInfo(movie.id)" />
+
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">{{ movie.title }}</ion-card-title>
+
+      <ion-card-subtitle *ngIf="showDetails" class="ion-text-center">
+        <div *ngIf="movie.vote_average">
+          <ion-icon name="star" color="warning"></ion-icon>
+          {{ movie.vote_average.toFixed(1) }}/10 
+          <small>({{ movie.vote_count }} votes)</small>
+        </div>
+        <div *ngIf="showMeta">
+          <span><strong>Language:</strong> {{ movie.original_language.toUpperCase() }}</span> • 
+          <span><strong>Release:</strong> {{ movie.release_date }}</span>
+        </div>
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content *ngIf="showDetails">
+      <h3>Overview</h3>
+      <p *ngIf="movie.overview; else noOverview">{{ movie.overview }}</p>
+      <ng-template #noOverview><p>No overview available.</p></ng-template>
+    </ion-card-content>
+
+    <div class="interaction-buttons">
+      <ion-button (click)="toggleLike(movie.id)" fill="clear">
+        <ion-icon size="large" [name]="interaction?.isLiked  ? 'heart' : 'heart-outline'" [color]="interaction?.isLiked ? 'danger' : 'medium'"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="toggleFavorite(movie.id)" fill="clear">
+        <ion-icon size="large" [name]="interaction?.isFavorite ? 'star' : 'star-outline'" [color]="interaction?.isFavorite ? 'warning' : 'medium'"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="toggleWatchLater(movie.id)" fill="clear">
+        <ion-icon size="large" [name]="interaction?.isWatchLater ? 'bookmark' : 'bookmark-outline'" [color]="interaction?.isWatchLater ? 'primary' : 'medium'"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-card>
+</ng-container>
+
+<ng-template #skeletonCard>
+  <ion-card>
+    <ion-skeleton-text animated style="width: 100%; height: 300px;"></ion-skeleton-text>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-skeleton-text animated style="width: 60%; height: 24px;"></ion-skeleton-text>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <ion-skeleton-text animated style="width: 40%; height: 16px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 30%; height: 16px; margin-top: 6px;"></ion-skeleton-text>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-skeleton-text animated style="width: 90%; height: 14px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 95%; height: 14px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 80%; height: 14px;"></ion-skeleton-text>
+    </ion-card-content>
+    <div class="interaction-buttons" style="display: flex; justify-content: center; gap: 12px;">
+      <ion-skeleton-text animated style="width: 40px; height: 40px; border-radius: 50%;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 40px; height: 40px; border-radius: 50%;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 40px; height: 40px; border-radius: 50%;"></ion-skeleton-text>
+    </div>
+  </ion-card>
+</ng-template>
+
+
+<div *ngIf="showReviews">
+  <div class="card-review-wrapper">
+    <div class="card-review-scroll">
+      
+      <!-- Show message if no reviews -->
+      <ng-container *ngIf="movieReviews?.length === 0 && userReview === null">
+        <div class="chip-scroll">
+          <ion-chip (click)="openReviewModal()">
+          This movie has no reviews yet. Write a review
+          </ion-chip>
+        </div>
+      </ng-container>
+      <!-- Show real reviews -->
+     <ng-container *ngIf="!isLoadingReviews" #hasReviews>
+      <ion-card *ngFor="let review of movieReviews">
+        <ion-card-header>
+          <ion-card-title>{{ '⭐'.repeat(review.rating) }}</ion-card-title>
+          <ion-card-subtitle>{{ review.name }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          {{ review.review || 'No comment left' }}
+        </ion-card-content>
+      </ion-card>
+      </ng-container>
+
+
+      <!-- Skeleton placeholders -->
+      <ng-container *ngIf="isLoadingReviews">
+        <ion-card *ngFor="let skeleton of [1,2,3]">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-skeleton-text animated style="width: 50%; height: 20px;"></ion-skeleton-text>
+            </ion-card-title>
+            <ion-card-subtitle>
+              <ion-skeleton-text animated style="width: 30%; height: 14px;"></ion-skeleton-text>
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-skeleton-text animated style="width: 90%; height: 14px; margin-bottom: 6px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 80%; height: 14px;"></ion-skeleton-text>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+ion-button:active .heart-icon {
+    transform: rotate(-15deg) scale(1.2);
+}
+.favorite-icon {
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+ion-button:active .favorite-icon {
+    transform: scale(1.2);
+}
+.watch-later-icon {
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+ion-button:active .watch-later-icon {
+    transform: scale(1.2);
+}
+
+.interaction-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding-bottom: 16px;
+}
+
+ion-card-subtitle {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+ion-card-content h3 {
+  margin-top: 8px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+
+/* .card-review-wrapper {
+  overflow-x: auto;
+  padding: 8px 0;
+}
+
+.card-review-scroll {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  padding: 8px 16px;
+}
+
+.card-review-scroll ion-card {
+  flex: 0 0 auto;
+  min-width: 240px;
+  max-width: 280px;
+} */
+
+
+.card-review-wrapper {
+  overflow-x: auto;
+  padding: 8px 0;
+}
+
+.card-review-scroll {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  padding: 8px 16px;
+  min-width: max-content; /* ensure container grows with content */
+}
+
+.card-review-scroll ion-card {
+  flex: 0 0 auto;
+  min-width: 240px;
+  max-width: 280px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+}
