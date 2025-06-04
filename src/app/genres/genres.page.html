@@ -1,9 +1,8 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="false">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>genres</ion-title>
     <div class="logo-container">
       <ion-img 
         src="assets/images/logos/logo.png" 
@@ -11,15 +10,31 @@
         class="logo-image">
       </ion-img>
     </div>
+    
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">genres</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+
+<ion-content >
+
+<div class="searchbar-wrapper">
+<ion-searchbar 
+  [(ngModel)]="searchQuery"
+  placeholder="Search movies"
+  (ionInput)="onSearch($event)"
+  (keydown.enter)="displaySuggestions()"></ion-searchbar>
+
+<ion-list *ngIf="this.ratedMoviesService.suggestions.length > 0 ">
+  <ion-item
+    *ngFor="let movie of this.ratedMoviesService.suggestions | slice:0:10"
+    (click)="goToMovieInfo(movie.id)" 
+    > <!-- [ | slice:0:10 ] pipeline para limitar resultados tlrdr -> "uma fatia" da pos x até y-->
+    <ion-label>{{ movie.title }}</ion-label>
+  </ion-item>
+</ion-list>
+</div>
+
 
 <ion-grid>
   <ion-row>
@@ -32,7 +47,6 @@
         </ion-card-header>
       </ion-card>
     </ion-col>
-
     <ion-col size="12" *ngFor="let genre of genres">
       <ion-card class="genre-card" (click)="goToGenre(genre.id)">
         <img [src]="formatGenreImageName(genre.name)" [alt]="genre.name + ' image'" />

@@ -1,16 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <div class="logo-container">
+      <ion-img 
+        src="assets/images/logos/logo.png" 
+        alt="ToltaMovies - Busca Filmes" 
+        class="logo-image">
+      </ion-img>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
   <div>
-    <div class="list-header">
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <h1 class="list-title">
-        <span style="color:black" *ngIf="listType === 'liked'">❤️ Liked</span>
-        <span style="color:black" *ngIf="listType === 'favorites'">⭐ Favorites</span>
-        <span style="color:black" *ngIf="listType === 'watchlater'">⏱️ Watch Later</span>
-      </h1>
-      <ion-badge color="light" class="counter-badge">{{ movies?.length }} items</ion-badge>
-    </div>
+    <h1 class="list-title">
+      <span style="color:black" *ngIf="listType === 'liked'">❤️ Liked</span>
+      <span style="color:black" *ngIf="listType === 'favorites'">⭐ Favorites</span>
+      <span style="color:black" *ngIf="listType === 'watchlater'">⏱️ Watch Later</span>
+    </h1>
+    <ion-badge color="light" class="counter-badge">{{ movies?.length }} items</ion-badge>
+  </div>
     
     <!-- Loading state -->
     <div *ngIf="isLoading" class="loading-spinner">
@@ -36,5 +47,4 @@
           'Watch Later' 
         }} list</p>
       </div>
-  </div>
 </ion-content>
