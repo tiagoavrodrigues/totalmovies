@@ -31,6 +31,10 @@ const routes: Routes = [
     path: 'discover/:genreId',
     loadChildren: () => import('./discover/discover.module').then( m => m.DiscoverPageModule)
   },
+    {
+    path: 'discover/:suggestions',
+    loadChildren: () => import('./discover/discover.module').then( m => m.DiscoverPageModule)
+  },
   {
     path: 'movieinfo/:movieId',
     loadChildren: () => import('./movieinfo/movieinfo.module').then( m => m.MovieinfoPageModule)
