@@ -1,25 +1,38 @@
 import { Injectable } from '@angular/core';
 import { Storage }from '@ionic/storage-angular'
 import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
-import { Session } from './user';
+import { Session, User } from './user';
+import { Router } from '@angular/router';
+import { SupabaseService } from './supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
-  session: Session | null = null;
+  private session: Session | null = null;
+  private user: User | null = null;
 
-  constructor(private storage: Storage) {
+  constructor(private storage: Storage, private router: Router, private supabaseService: SupabaseService) {
+  }
+
+  redirectIfNoSession(): boolean{
+    if(!this.hasSession()){
+      this.router.navigateByUrl('/signin');
+      return true;
+    }
+    return false;
+  }
+
+  async initStorage(){
+    await this.storage.defineDriver(CordovaSQLiteDriver);
+    await this.storage.create();
   }
 
   async loadSession(){
-    await this.storage.defineDriver(CordovaSQLiteDriver);
-    await this.storage.create();
     const session = await this.storage.get('session') as Session;
     if(session){
       this.session = session;
     }
-    console.log('sessionId: ' + this.session?.id);
   }
 
 async createSession(session: Session) {
@@ -40,6 +53,14 @@ async createSession(session: Session) {
   }
 
   hasSession(): boolean {
-    return !!this.session?.email;
+    return !!(this.session && this.session.email);
+  }
+
+  async authenticate(email: string, password: string): Promise<Session | null> {
+    const data =  await this.supabaseService.getUserByEmail(email);
+    if (!data) return null;
+
+    if(data.password !== password) return null;
+    return data as Session;
   }
 }

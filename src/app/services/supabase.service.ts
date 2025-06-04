@@ -25,7 +25,15 @@ export class SupabaseService {
   private supabaseClient: SupabaseClient;
 
   constructor() {
-    this.supabaseClient = createClient(this.supabaseUrl, this.supabaseKey);
+    //this.supabaseClient = createClient(this.supabaseUrl, this.supabaseKey);
+    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey, {
+      global: {
+        headers: {
+          'Accept': 'application/json', //
+        },
+      },
+    });
+
   }
 
   async getUsers(): Promise<User[]> {
@@ -44,10 +52,9 @@ export class SupabaseService {
       .from('users')
       .select('*')
       .eq('email', email)
-      .single();
+      .maybeSingle();
 
     if(error) throw error;
-
     return data as User;
   }
 
@@ -55,10 +62,9 @@ export class SupabaseService {
     const{ data, error } = await this.supabaseClient
     .from('users')
     .insert(user)
-    .single();
+    .maybeSingle();
 
     if(error) return null;
-
     return data;
   }
 
@@ -69,7 +75,7 @@ export class SupabaseService {
       .select('*')
       .eq('userId', userId)
       .eq('movieId', movieId)
-      .single();
+      .maybeSingle();
 
     if(error) return null;
     return data as Interaction;
@@ -145,7 +151,7 @@ export class SupabaseService {
       .select('*')
       .eq('userId', userId)
       .eq('movieId', movieId)
-      .single();
+      .maybeSingle();
     if(error) return null;
 
     return data as Review;
@@ -155,8 +161,6 @@ export class SupabaseService {
     await this.supabaseClient
       .from('userMovieReview')
       .insert(newReview);
-    console.log(newReview);
-
   }
 
   async updateMovieReviewById(newReview: Review): Promise<boolean>{
@@ -172,7 +176,7 @@ export class SupabaseService {
     return true;
   }
 
-  async removeMovieReviewById(reviewId: Review): Promise<boolean>{
+  async removeMovieReviewById(reviewId: string): Promise<boolean>{
     const{ data, error}= await this.supabaseClient
       .from('userMovieReview')
       .delete()

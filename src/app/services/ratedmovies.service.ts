@@ -54,8 +54,16 @@ export class RatedmoviesService {
   ratedMoviesResponse: RatedMoviesResponse | null = null;
 
   genres: Genre[] = [];
+  suggestions: RatedMovie[] = [];
 
-  constructor(private sessionService: SessionService, private supabaseService: SupabaseService) {
+  constructor(private sessionService: SessionService, private supabaseService: SupabaseService,) {
+  }
+
+  async fetchMoviesByQuery(query: string): Promise<RatedMovie[]> {
+    const url = `${this.tmdbUrl}/search/movie?api_key=${this.tmdbKey}&query=${encodeURIComponent(query)}`; //encodeURIComponent lidar com espacos e caract. esp.
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.results || [];
   }
 
   async fetchTopRatedMovies(page: number = 1): Promise<RatedMoviesResponse> {
@@ -70,10 +78,10 @@ export class RatedmoviesService {
     return this.genres;
   }
 
-  async fetchMoviesByGenres(genreId: number): Promise<RatedMoviesResponse> {
-    const response = await fetch(`${this.tmdbUrl}/discover/movie?api_key=${this.tmdbKey}&with_genres=${genreId}&page=${1}`);
-    return this.ratedMoviesResponse = await response.json();
-  }
+async fetchMoviesByGenres(genreId: number): Promise<RatedMoviesResponse | null> {
+  const response = await fetch(`${this.tmdbUrl}/discover/movie?api_key=${this.tmdbKey}&with_genres=${genreId}&page=1`);
+  return this.ratedMoviesResponse = await response.json();
+}
 
   async fetchMovieById(movieId: number): Promise<RatedMovie> {
     const response = await fetch(`${this.tmdbUrl}/movie/${movieId}?api_key=${this.tmdbKey}`);
@@ -167,8 +175,7 @@ export class RatedmoviesService {
     interaction.isWatchLater = !interaction.isWatchLater;
     await this.supabaseService.updateMovieInteraction(interaction);
     return interaction;
-  }
-  
+  }  
 }
 
 
