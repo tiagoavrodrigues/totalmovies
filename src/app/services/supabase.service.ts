@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import {createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Session, User } from './user';
 import { environment } from '../../environments/environment';
 import { RatedMovie, Review } from './ratedmovies.service';
+import { SessionService } from './session.service';
 
 export interface Interaction{
   id?: string,
@@ -18,14 +19,9 @@ export interface Interaction{
 })
 export class SupabaseService {
 
-  
-
-  private supabaseUrl = environment.supabaseUrl;
-  private supabaseKey = environment.supabaseKey;
   private supabaseClient: SupabaseClient;
 
-  constructor() {
-    //this.supabaseClient = createClient(this.supabaseUrl, this.supabaseKey);
+  constructor(private injector: Injector) {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey, {
       global: {
         headers: {
@@ -135,10 +131,13 @@ export class SupabaseService {
   };
 
   async getReviewsByMovieId(movieId: number): Promise<Review[] | null>{
+    const sessionService = this.injector.get(SessionService);
+    const userId = sessionService.getSession()!.id;
     const{ data, error } = await this.supabaseClient
       .from('userMovieReview')
       .select('*')
-      .eq('movieId', movieId);
+      .eq('movieId', movieId)
+      .neq('userId', userId);
 
     if(error) return null;
 
