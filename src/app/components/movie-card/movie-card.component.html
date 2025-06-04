@@ -85,8 +85,8 @@
 
       <!-- Show real reviews -->
      <ng-container *ngIf="!isLoadingReviews" #hasReviews>
-      <ion-card *ngFor="let review of movieReviews">
-        <ion-card-header>
+      <ion-card *ngFor="let review of movieReviews" >
+        <ion-card-header >
           <ion-card-title>{{ '⭐'.repeat(review.rating) }}</ion-card-title>
           <ion-card-subtitle>{{ review.name }}</ion-card-subtitle>
         </ion-card-header>

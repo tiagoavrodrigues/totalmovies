@@ -9,7 +9,7 @@ import { Session } from './services/user';
   styleUrls: ['app.component.scss'],
   standalone: false,
 })
-export class AppComponent {
+export class AppComponent{
 
   public userInfo : Session | null = this.sessionService.getSession();
 
@@ -23,8 +23,10 @@ export class AppComponent {
   public labels = [];
   constructor(private sessionService: SessionService, private router: Router) {}
 
+
   
   async ngOnInit() { }
+
 
   async signOut() {
     console.log('signout called');
