@@ -4,6 +4,7 @@ import { SupabaseService } from '../services/supabase.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SessionService } from '../services/session.service';
 import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-signin',
@@ -18,7 +19,12 @@ export class SigninPage implements OnInit {
   public signinForm: FormGroup;
   loginError: string | null = null;
 
-  constructor(private router: Router, private supabaseService: SupabaseService, private formBuilder: FormBuilder, private sessionService: SessionService) { 
+  constructor(
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private sessionService: SessionService,
+    private menuController: MenuController
+  ) { 
     this.signinForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
@@ -26,23 +32,16 @@ export class SigninPage implements OnInit {
     
   }
 
-  private async authenticate(email: string, password: string): Promise<boolean> {
-    try {
-      this.user = await this.supabaseService.getUserByEmail(email);
-      return this.user.password === password;
-    } catch (error) {
-      return false;
-    }
-  }
+
 
   async onSubmit(){
     if (this.signinForm.valid) {
-      var result = await this.authenticate(this.signinForm.get('email')?.value, this.signinForm.get('password')?.value)
+      var result = await this.sessionService.authenticate(this.signinForm.get('email')?.value, this.signinForm.get('password')?.value)
       if(result){
-        this.sessionService.createSession({
-          id: this.user!.id,
-          email: this.user!.email,
-          name: this.user!.name
+        await this.sessionService.createSession({
+          id: result.id,
+          email: result.email,
+          name: result.name
         });
         this.router.navigateByUrl('/genres');
       } else {
@@ -56,20 +55,26 @@ export class SigninPage implements OnInit {
     }
   }
 
-  async ngOnInit() {
+async ngOnInit() {}
+
+  async ionViewWillEnter() {
+    this.menuController.enable(true);
+    await this.sessionService.initStorage();
     await this.sessionService.loadSession();
-    if (this.sessionService.hasSession()) this.router.navigateByUrl('/genres');
+    if (this.sessionService.hasSession()) {
+      this.router.navigateByUrl('/genres');
+    }
   }
 
 
-    ionViewWillLeave() {
-    this.signinForm.reset();
-    Object.values(this.signinForm.controls).forEach(control => {
-      control.setErrors(null);
-      control.markAsPristine();
-      control.markAsUntouched();
-      control.updateValueAndValidity();
-    });
+  ionViewWillLeave() {
+  this.signinForm.reset();
+  Object.values(this.signinForm.controls).forEach(control => {
+    control.setErrors(null);
+    control.markAsPristine();
+    control.markAsUntouched();
+    control.updateValueAndValidity();
+  });
 
     this.signinForm.updateValueAndValidity();
     this.signinForm.reset();

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../services/user';
+import { Session, User } from '../services/user';
 import { SupabaseService } from '../services/supabase.service';
 import { AbstractControl, EmailValidator, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SessionService } from '../services/session.service';
+import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-signup',
@@ -14,11 +17,14 @@ export class SignupPage implements OnInit {
   newUser : User;
   confirmPassword: string;
 
-  isLoadingUsers: boolean;
-
   public signupForm: FormGroup;
 
-  constructor(private supabaseService: SupabaseService, private formBuilder: FormBuilder) {
+  constructor(
+    private supabaseService: SupabaseService,
+    private formBuilder: FormBuilder,
+    private sessionService: SessionService,
+    private router: Router,
+    private menuController: MenuController){
     
     this.newUser = {
       email: '',
@@ -27,7 +33,6 @@ export class SignupPage implements OnInit {
     }
 
     this.confirmPassword = '';
-    this.isLoadingUsers = false;
 
     this.signupForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -40,19 +45,20 @@ export class SignupPage implements OnInit {
   }
 
   async onSubmit(){
-    if (this.signupForm.valid) {
-      this.newUser = {
-        email: this.signupForm.get('email')!.value,
-        password: this.signupForm.get('password')!.value,
-        name: this.signupForm.get('name')!.value
-      }
-      await this.supabaseService.insertUser(this.newUser);
-    } else {
-      // marcar todos os campos como tocados para exibição das mensagens de erro
+    if (!this.signupForm.valid) {
+        // marcar todos os campos como tocados para exibição das mensagens de erro
       Object.values(this.signupForm.controls).forEach(control => {
         control.markAsTouched();
       });
+      return;
     }
+
+    this.newUser = {
+      email: this.signupForm.get('email')!.value,
+      password: this.signupForm.get('password')!.value,
+      name: this.signupForm.get('name')!.value
+    }
+    await this.redirectNewUser(this.newUser);
   }
 
 private emailTakenValidator(fromControl: AbstractControl): Promise<{ emailTaken: boolean } | null> { //Promise == async
@@ -71,18 +77,11 @@ private emailTakenValidator(fromControl: AbstractControl): Promise<{ emailTaken:
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
-  private async getUser(email: string){
-    this.isLoadingUsers = true;
-    var user = await this.supabaseService.getUserByEmail(email);
-    this.isLoadingUsers = false;
-    return user;
-  }
-
-  private async insertUser(user: User) {
-    await this.supabaseService.insertUser(user);
-  }
-
   ngOnInit() {
+  }
+
+  ionViewWillEnter(){
+    this.menuController.enable(false);
   }
 
   ionViewWillLeave() {
@@ -98,4 +97,15 @@ private emailTakenValidator(fromControl: AbstractControl): Promise<{ emailTaken:
     this.signupForm.reset();
   }
 
+  async redirectNewUser(session: Session){
+    console.log('got here bro');
+    await this.supabaseService.insertUser(this.newUser);
+
+    const auth = await this.sessionService.authenticate(this.newUser.email, this.newUser.password)
+    if(auth){
+      await this.sessionService.initStorage();
+      await this.sessionService.createSession(auth);
+      this.router.navigateByUrl('/genres');
+    }
+  }
 }
