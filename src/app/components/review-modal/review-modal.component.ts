@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SessionService } from 'src/app/services/session.service';
 import { Session } from 'src/app/services/user';
-import { SupabaseService } from 'src/app/services/supabase.service';
 
 @Component({
   selector: 'app-review-modal',
@@ -30,11 +29,9 @@ export class ReviewModalComponent {
 
   user: Session | null = null;
 
-  constructor(private modalController: ModalController, private sessionService: SessionService, private supabaseService: SupabaseService) {}
+  constructor(private modalController: ModalController, private sessionService: SessionService) {}
 
-  ngOnInit() {
-    this.user = this.sessionService.getSession();
-  }
+  ngOnInit() {this.user = this.sessionService.getSession();}
 
   setRating(rating: number) {
     if(rating === 0) rating = 1;
@@ -58,12 +55,7 @@ export class ReviewModalComponent {
       name: this.user!.name,       
       review: this.review.review     // form
     };
-
-    const success = await this.supabaseService.insertMovieReview(newReview);
-
-    
-      await this.modalController.dismiss(newReview, 'confirm');
-
+    await this.modalController.dismiss(newReview, 'confirm');
   }
 
 }

@@ -4,7 +4,7 @@ import { Interaction, SupabaseService } from '../../services/supabase.service';
 import { SessionService } from '../../services/session.service';
 import { RatedmoviesService } from '../../services/ratedmovies.service';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ReviewModalComponent } from '../review-modal/review-modal.component';
 
@@ -35,19 +35,24 @@ export class MovieCardComponent implements OnInit {
     private supabaseService: SupabaseService,
     private ratedMoviesService: RatedmoviesService,
     private router: Router,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private toastController: ToastController
   ) {
     this.imgBaseUrl = this.ratedMoviesService.getImgBaseUrl();
   }
 
   async ngOnInit() {
+    const redirected = await this.sessionService.redirectIfNoSession()
+    if(redirected) return;
+
     const userId = this.sessionService.getSession()?.id;
     if (userId && this.movie?.id) {
       this.interaction = await this.supabaseService.getMovieInteraction(userId, this.movie.id);
     }
     
-    this.movieReviews = await this.supabaseService.getReviewsByMovieId(this.movie!.id);
-    this.userReview = await this.supabaseService.getMovieReviewByUserId(userId!, this.movie!.id)
+    if(this.showReviews){
+      await this.loadReviews(userId!)
+    }
     this.isLoading = false;
     this.isLoadingReviews = false;
   }
@@ -128,45 +133,86 @@ export class MovieCardComponent implements OnInit {
   }
 
   goToMovieInfo(movieId: number | null){
-     if (!this.onClickRedirectToMovieInfo) return;
+    if (!this.onClickRedirectToMovieInfo) return;
     if(movieId){
       this.router.navigateByUrl(`/movieinfo/${movieId}`);
     }
   }
 
-async openModal() {
-  const modal = await this.modalController.create({
-    component: ReviewModalComponent
-  });
-
-  await modal.present();
-
-  const { data } = await modal.onDidDismiss();
-  if (data) {
-    console.log('User review submitted:', data);
-    // Optionally save it to backend
+  async loadReviews(userId: string){
+      this.movieReviews = await this.supabaseService.getReviewsByMovieId(this.movie!.id);
+      this.userReview = await this.supabaseService.getMovieReviewByUserId(userId!, this.movie!.id)
   }
-}
 
-async openReviewModal() {
-  const modal = await this.modalController.create({
-    component: ReviewModalComponent,
-    componentProps: {
-      movieId: this.movie?.id
-    }
-  });
+  async openModal() {
+    const modal = await this.modalController.create({
+      component: ReviewModalComponent
+    });
 
-  await modal.present();
+    await modal.present();
 
-  const { data, role } = await modal.onDidDismiss();
-
-  if (role === 'confirm' && data) {
-    console.log('User review submitted:', data);
-    
-    // carregar reviews
-    if (this.movie?.id) {
-      this.movieReviews = await this.supabaseService.getReviewsByMovieId(this.movie.id);
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      console.log('User review submitted:', data);
+      // Optionally save it to backend
     }
   }
+
+  async openReviewModal() {
+    const modal = await this.modalController.create({
+      component: ReviewModalComponent,
+      componentProps: {
+        movieId: this.movie?.id
+      }
+    });
+
+    await modal.present();
+
+    const { data, role } = await modal.onDidDismiss();
+
+    if (role === 'confirm' && data) {
+      
+      
+      this.isLoadingReviews = true;
+      await this.supabaseService.insertMovieReview(data);
+      // carregar reviews
+      const userId = this.sessionService.getSession()?.id;
+      this.loadReviews(userId!);
+
+      await this.showToast('Review submitted successfully!');
+      this.isLoadingReviews = false;
+    }
+  }
+
+  async deleteReview() {
+    if (!this.userReview?.id || this.userReview.id.length === 0) return;
+
+    const confirmed = confirm('Are you sure you want to delete your review?');
+    if (!confirmed) return;
+
+    const success = await this.supabaseService.removeMovieReviewById(this.userReview.id);
+
+    if (success) {
+      const userId = this.sessionService.getSession()?.id;
+      this.isLoadingReviews = true
+      if (userId) {
+        await this.loadReviews(userId);
+      }
+      this.isLoadingReviews = false
+      await this.showToast('Your review has been deleted');
+    } else {
+      await this.showToast('Something went wrong while deleting your review');
+    }
+  }
+
+  async showToast(message: string) {
+  const toast = await this.toastController.create({
+    message,
+    duration: 3000,
+    position: 'bottom',
+    color: 'medium'
+  });
+
+  await toast.present();
 }
 }

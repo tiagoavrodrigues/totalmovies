@@ -29,17 +29,15 @@ export class ListsPage implements OnInit {
     private menu: MenuController,
   ){}
 
-  async ngOnInit() {
+  async ngOnInit() { }
+
+  async ionViewWillEnter() {
     if(this.sessionService.getSession() == null){
       this.router.navigateByUrl('/signin');
     }
     this.listType = this.route.snapshot.paramMap.get('listType');
     await this.loadItems();
     this.imgBaseUrl = this.ratedMovieService.getImgBaseUrl();
-    this.ionViewWillEnter();
-  }
-
-  ionViewWillEnter() {
     this.menu.enable(true);
   }
 

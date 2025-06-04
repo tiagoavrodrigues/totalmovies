@@ -22,16 +22,16 @@ export class MovieinfoPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private ratedMovieService: RatedmoviesService,
-    private sessionService: SessionService,
-    private supabaseService: SupabaseService)
+    private sessionService: SessionService,)
   {}
 
   async ngOnInit() {
-    if(this.sessionService.getSession() === null){
-      console.log(this.sessionService.getSession()?.id);
-      this.router.navigateByUrl('/signin');
-      return;
-    }
+  }
+
+  async ionViewWillEnter(){
+    const redirected = await this.sessionService.redirectIfNoSession()
+    if(redirected) return;
+
     this.byParamMovieId = Number(this.route.snapshot.paramMap.get('movieId'));
     if(this.byParamMovieId === null){
       this.router.navigateByUrl('/genres');
@@ -41,79 +41,4 @@ export class MovieinfoPage implements OnInit {
     this.imgBaseUrl = this.ratedMovieService.getImgBaseUrl();
     this.loading = false;
   }
-
-/*   async loadInteraction(userId: string, movieId: number){
-    this.interaction = await this.supabaseService.getMovieInteraction(userId, movieId);
-  } */
-
-/*   async toggleLike(movieId: number) {
-    const userId = this.sessionService.getSession()?.id;
-
-    if (!userId || !movieId) return;
-
-    // se nao existir nenhuma interacao, cria nova
-    if (!this.interaction) {
-      const newInteraction: Interaction = {
-        userId,
-        movieId,
-        isLiked: true,
-        isFavorite: false,
-        isWatchLater: false
-      };
-      const success = await this.supabaseService.insertMovieInteraction(newInteraction);
-      if (success) this.interaction = newInteraction;
-      return;
-    }
-
-    // atualiza interacao existente
-    this.interaction.isLiked = !this.interaction.isLiked;
-    await this.supabaseService.updateMovieInteraction(this.interaction);
-  }
-
-  async toggleFavorite(movieId: number) {
-    const userId = this.sessionService.getSession()?.id;
-
-    if (!userId || !movieId) return;
-
-    // se nao existir nenhuma interacao, cria nova
-    if (!this.interaction) {
-      const newInteraction: Interaction = {
-        userId,
-        movieId,
-        isLiked: false,
-        isFavorite: true,
-        isWatchLater: false
-      };
-      const response = await this.supabaseService.insertMovieInteraction(newInteraction);
-      if (response) this.interaction = newInteraction;
-      return;
-    }
-    // atualiza interacao existente
-    this.interaction.isFavorite = !this.interaction.isFavorite;
-    await this.supabaseService.updateMovieInteraction(this.interaction);
-  }
-
-  async toggleWatchLater(movieId: number) {
-    const userId = this.sessionService.getSession()?.id;
-
-    if (!userId || !movieId) return;
-
-    // se nao existir nenhuma interacao, cria nova
-    if (!this.interaction) {
-      const newInteraction: Interaction = {
-        userId,
-        movieId,
-        isLiked: false,
-        isFavorite: false,
-        isWatchLater: true
-      };
-      const success = await this.supabaseService.insertMovieInteraction(newInteraction);
-      if (success) this.interaction = newInteraction;
-      return;
-    }
-    // atualiza interacao existente
-    this.interaction.isWatchLater = !this.interaction.isWatchLater;
-    await this.supabaseService.updateMovieInteraction(this.interaction);
-  } */
-
 }
