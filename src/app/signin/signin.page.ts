@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SessionService } from '../services/session.service';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { OrientationLockOptions, ScreenOrientation } from '@capacitor/screen-orientation';
 
 @Component({
   selector: 'app-signin',
@@ -58,13 +59,16 @@ export class SigninPage implements OnInit {
 async ngOnInit() {}
 
   async ionViewWillEnter() {
-    this.menuController.enable(true);
+    const options: OrientationLockOptions = { orientation: 'portrait' };
+    ScreenOrientation.lock(options);
+    this.menuController.enable(false);
     await this.sessionService.initStorage();
     await this.sessionService.loadSession();
     if (this.sessionService.hasSession()) {
       this.router.navigateByUrl('/genres');
     }
   }
+
 
 
   ionViewWillLeave() {
