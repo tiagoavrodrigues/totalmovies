@@ -70,14 +70,19 @@
   <div class="card-review-wrapper">
     <div class="card-review-scroll">
       
-      <!-- Show message if no reviews -->
-      <ng-container *ngIf="movieReviews?.length === 0 && userReview === null">
-        <div class="chip-scroll">
-          <ion-chip (click)="openReviewModal()">
-          This movie has no reviews yet. Write a review
-          </ion-chip>
-        </div>
+
+      <ng-container *ngIf="!isLoadingReviews && userReview" #hasReviews>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ '⭐'.repeat(userReview.rating) }}</ion-card-title>
+          <ion-card-subtitle>{{ userReview.name }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          {{ userReview.review || 'No comment left' }}
+        </ion-card-content>
+      </ion-card>
       </ng-container>
+
       <!-- Show real reviews -->
      <ng-container *ngIf="!isLoadingReviews" #hasReviews>
       <ion-card *ngFor="let review of movieReviews">
@@ -90,7 +95,6 @@
         </ion-card-content>
       </ion-card>
       </ng-container>
-
 
       <!-- Skeleton placeholders -->
       <ng-container *ngIf="isLoadingReviews">
@@ -113,3 +117,14 @@
     </div>
   </div>
 </div>
+
+      <!-- Show message if no reviews -->
+<ng-container *ngIf="showReviews && !isLoadingReviews">
+  <div class="chip-wrapper">
+    <ion-chip (click)="userReview ? deleteReview() : openReviewModal()">
+      {{ userReview 
+          ? 'Delete my review' 
+          : (movieReviews?.length ? 'Write a review for this movie' : 'This movie has no reviews yet. Write a review') }}
+    </ion-chip>
+  </div>
+</ng-container>

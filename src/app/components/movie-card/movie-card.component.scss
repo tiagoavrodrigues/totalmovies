@@ -35,26 +35,6 @@ ion-card-content h3 {
   font-weight: 600;
 }
 
-
-/* .card-review-wrapper {
-  overflow-x: auto;
-  padding: 8px 0;
-}
-
-.card-review-scroll {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  padding: 8px 16px;
-}
-
-.card-review-scroll ion-card {
-  flex: 0 0 auto;
-  min-width: 240px;
-  max-width: 280px;
-} */
-
-
 .card-review-wrapper {
   overflow-x: auto;
   padding: 8px 0;
@@ -65,7 +45,7 @@ ion-card-content h3 {
   flex-direction: row;
   gap: 12px;
   padding: 8px 16px;
-  min-width: max-content; /* ensure container grows with content */
+  min-width: max-content; // ensure container grows with content
 }
 
 .card-review-scroll ion-card {
@@ -75,4 +55,9 @@ ion-card-content h3 {
   height: 180px;
   display: flex;
   flex-direction: column;
+}
+
+.chip-wrapper {
+  display: flex;
+  justify-content: center;
 }
