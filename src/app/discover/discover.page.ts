@@ -23,6 +23,8 @@ export class DiscoverPage implements OnInit {
 
   byParamGenreId: number | null = null;
 
+  isSearch: boolean = false;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -32,11 +34,21 @@ export class DiscoverPage implements OnInit {
     this.imgBaseUrl = this.ratedMoviesService.getImgBaseUrl();
   }
 
-  async ngOnInit() {
+  async ngOnInit() {}
+
+  async ionViewWillEnter() {
+    const redirected = await this.sessionService.redirectIfNoSession()
+    if(redirected) return;
+
     const param = this.route.snapshot.paramMap.get('genreId');
 
     if (!param) {
       await this.loadMovies();
+      this.selectedGenreId = null;
+    } 
+    else if (param === 'suggestions') {
+      this.movies = this.ratedMoviesService.suggestions;
+      this.selectedGenreId = 9999999;
     } else {
       this.byParamGenreId = Number(param);
       
@@ -44,16 +56,15 @@ export class DiscoverPage implements OnInit {
         await this.loadMovies();
       } else {
         this.selectedGenreId = this.byParamGenreId;
-        this.filterByGenre(this.byParamGenreId);
+        await this.filterByGenre(this.byParamGenreId);
       }
     }
-
     this.genres = await this.ratedMoviesService.fetchMovieGenres();
   }
 
+  async ionViewWillLeave() { this.isSearch = false; }
 
   async loadMovies() {
-    this.page = 1;
     this.movies = [];
     this.selectedGenreId = null;
     const data = await this.ratedMoviesService.fetchTopRatedMovies(this.page);
@@ -79,7 +90,7 @@ export class DiscoverPage implements OnInit {
     this.movies = [];
     this.selectedGenreId = genreId;
     const data = await this.ratedMoviesService.fetchMoviesByGenres(genreId!);
-    this.movies = data.results;
+    this.movies = data!.results ?? [];
 
     setTimeout(() => {
       this.content?.scrollToTop(300);

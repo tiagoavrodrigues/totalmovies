@@ -12,3 +12,12 @@
   object-fit: cover;
   border-radius: 8px 8px 0 0;
 }
+
+
+.searchbar-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
