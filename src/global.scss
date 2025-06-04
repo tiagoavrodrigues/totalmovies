@@ -37,18 +37,46 @@
 //@import "@ionic/angular/css/palettes/dark.system.css";
 
 
-.logo-container {
+/** .logo-container {
     display: flex;
-    align-items: center; /* This vertically centers */
-    justify-content: center; /* This horizontally centers */
-    height: 100%; /* Takes full toolbar height */
+    align-items: center; // This vertically centers
+    justify-content: center; //* This horizontally centers
+    height: 100%; //* Takes full toolbar height
 }
 
  .logo-image {
     height: auto;
-    max-height: 80%; /* Prevents touching edges */
+    max-height: 80%; // Prevents touching edges 
     width: auto;
-    max-width: 180px; /* Adjust as needed */
+    max-width: 180px; // Adjust as needed
     object-fit: contain;
-    margin: auto; /* Extra centering assurance */
+    margin: auto; // Extra centering assurance 
+} 
+*/
+
+.logo-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; // Ensures it doesn't block the back button
+  z-index: 1; // So it’s above the background
+}
+
+.logo-image {
+  height: auto;
+  max-height: 80%;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+}
+
+ion-header,
+ion-toolbar,
+ion-content {
+  padding-top: env(safe-area-inset-top);
 }
