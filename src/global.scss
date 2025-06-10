@@ -37,23 +37,6 @@
 //@import "@ionic/angular/css/palettes/dark.system.css";
 
 
-/** .logo-container {
-    display: flex;
-    align-items: center; // This vertically centers
-    justify-content: center; //* This horizontally centers
-    height: 100%; //* Takes full toolbar height
-}
-
- .logo-image {
-    height: auto;
-    max-height: 80%; // Prevents touching edges 
-    width: auto;
-    max-width: 180px; // Adjust as needed
-    object-fit: contain;
-    margin: auto; // Extra centering assurance 
-} 
-*/
-
 .logo-container {
   position: absolute;
   left: 0;
@@ -79,4 +62,207 @@ ion-header,
 ion-toolbar,
 ion-content {
   padding-top: env(safe-area-inset-top);
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('./assets/fonts/figtree/Figtree-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+
+body {
+  font-family: 'Figtree', sans-serif !important;
+}
+
+:root {
+  font-family: 'JetBrains Mono', monospace;
+  --ion-color-primary: #2c2c2c;
+  --ion-color-primary-rgb: 44, 44, 44;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #262626;
+  --ion-color-primary-tint: #3d3d3d;
+
+  --ion-color-secondary: #999999;
+  --ion-color-secondary-rgb: 153, 153, 153;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #888888;
+  --ion-color-secondary-tint: #a6a6a6;
+
+  --ion-color-tertiary: #dcdcdc;
+  --ion-color-tertiary-rgb: 220, 220, 220;
+  --ion-color-tertiary-contrast: #000000;
+  --ion-color-tertiary-contrast-rgb: 0, 0, 0;
+  --ion-color-tertiary-shade: #c2c2c2;
+  --ion-color-tertiary-tint: #e4e4e4;
+
+  --ion-color-success: #4caf50;
+  --ion-color-success-rgb: 76, 175, 80;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #439943;
+  --ion-color-success-tint: #5ec65f;
+
+  --ion-color-warning: #ffcc00;
+  --ion-color-warning-rgb: 255, 204, 0;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e6b800;
+  --ion-color-warning-tint: #ffd633;
+
+  --ion-color-danger: #e53935;
+  --ion-color-danger-rgb: 229, 57, 53;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #ca2f2b;
+  --ion-color-danger-tint: #ea4f4b;
+
+  --ion-color-light: #f5f5f5;
+  --ion-color-light-rgb: 245, 245, 245;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #d6d6d6;
+  --ion-color-light-tint: #f8f8f8;
+
+  --ion-color-medium: #b0b0b0;
+  --ion-color-medium-rgb: 176, 176, 176;
+  --ion-color-medium-contrast: #000000;
+  --ion-color-medium-contrast-rgb: 0, 0, 0;
+  --ion-color-medium-shade: #9e9e9e;
+  --ion-color-medium-tint: #bfbfbf;
+
+  --ion-color-dark: #121212;
+  --ion-color-dark-rgb: 18, 18, 18;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #0f0f0f;
+  --ion-color-dark-tint: #2a2a2a;
+}
+
+ion-label,
+ion-button,
+ion-title,
+ion-input,
+ion-textarea,
+ion-card,
+ion-card-title,
+ion-card-subtitle,
+ion-list-header,
+ion-note,
+ion-chip,
+ion-item,
+ion-text {
+  font-family: 'Figtree', sans-serif !important;
+}
+
+ion-header {
+  --padding-top: 20px;
 }
