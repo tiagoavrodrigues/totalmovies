@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { Review } from '../../services/ratedmovies.service';
-import { IonHeader } from "@ionic/angular/standalone";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SessionService } from 'src/app/services/session.service';
 import { Session } from 'src/app/services/user';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-review-modal',
@@ -29,7 +29,10 @@ export class ReviewModalComponent {
 
   user: Session | null = null;
 
-  constructor(private modalController: ModalController, private sessionService: SessionService) {}
+  constructor(
+    private modalController: ModalController,
+    private sessionService: SessionService,
+    private loadingController: LoadingController) {}
 
   ngOnInit() {this.user = this.sessionService.getSession();}
 
@@ -55,7 +58,16 @@ export class ReviewModalComponent {
       name: this.user!.name,       
       review: this.review.review     // form
     };
+
+/*      const loading = await this.loadingController.create({
+      showBackdrop: false,
+      spinner: 'lines'
+    });
+    loading.present(); */
+
     await this.modalController.dismiss(newReview, 'confirm');
+
+    //loading.dismiss();
   }
 
 }

@@ -5,6 +5,7 @@ import { MenuController } from '@ionic/angular';
 import { RatedMovie, RatedmoviesService } from '../services/ratedmovies.service';
 import { SessionService } from '../services/session.service';
 import { Interaction, SupabaseService } from '../services/supabase.service';
+import { StatusBar } from '@capacitor/status-bar';
 
 @Component({
   standalone:false,
@@ -35,6 +36,8 @@ export class ListsPage implements OnInit {
     if(this.sessionService.getSession() == null){
       this.router.navigateByUrl('/signin');
     }
+
+    await StatusBar.hide();
     this.listType = this.route.snapshot.paramMap.get('listType');
     await this.loadItems();
     this.imgBaseUrl = this.ratedMovieService.getImgBaseUrl();

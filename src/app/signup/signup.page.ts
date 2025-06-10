@@ -5,6 +5,9 @@ import { AbstractControl, EmailValidator, FormBuilder, FormGroup, Validators } f
 import { SessionService } from '../services/session.service';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
+import { StatusBar } from '@capacitor/status-bar';
+
 
 @Component({
   selector: 'app-signup',
@@ -24,7 +27,8 @@ export class SignupPage implements OnInit {
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
     private router: Router,
-    private menuController: MenuController){
+    private menuController: MenuController,
+    private loadingController: LoadingController){
     
     this.newUser = {
       email: '',
@@ -80,8 +84,9 @@ private emailTakenValidator(fromControl: AbstractControl): Promise<{ emailTaken:
   ngOnInit() {
   }
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     this.menuController.enable(false);
+    await StatusBar.hide();
   }
 
   ionViewWillLeave() {
@@ -98,14 +103,21 @@ private emailTakenValidator(fromControl: AbstractControl): Promise<{ emailTaken:
   }
 
   async redirectNewUser(session: Session){
-    console.log('got here bro');
+
+    const loading = await this.loadingController.create({
+    message: 'Signing up...',
+    spinner: 'lines'
+    });
+    loading.present();
+
     await this.supabaseService.insertUser(this.newUser);
 
     const auth = await this.sessionService.authenticate(this.newUser.email, this.newUser.password)
     if(auth){
       await this.sessionService.initStorage();
       await this.sessionService.createSession(auth);
-      this.router.navigateByUrl('/genres');
+      loading.dismiss();
+      this.router.navigateByUrl('/genres', { replaceUrl: true });
     }
   }
 }

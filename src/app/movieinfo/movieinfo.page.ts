@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RatedMovie, RatedmoviesService } from '../services/ratedmovies.service';
 import { SessionService } from '../services/session.service';
 import { Interaction, SupabaseService } from '../services/supabase.service';
+import { StatusBar } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-movieinfo',
@@ -31,6 +32,8 @@ export class MovieinfoPage implements OnInit {
   async ionViewWillEnter(){
     const redirected = await this.sessionService.redirectIfNoSession()
     if(redirected) return;
+
+    await StatusBar.hide();
 
     this.byParamMovieId = Number(this.route.snapshot.paramMap.get('movieId'));
     if(this.byParamMovieId === null){

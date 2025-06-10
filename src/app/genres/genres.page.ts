@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { SessionService } from '../services/session.service';
 import { MenuController } from '@ionic/angular';
 import { AppComponent } from '../app.component';
+import { StatusBar } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-genres',
@@ -34,6 +35,7 @@ export class GenresPage implements OnInit {
   async ionViewWillEnter(){
     const redirected = await this.sessionService.redirectIfNoSession()
     if(redirected) return;
+    await StatusBar.hide();
     this.searchQuery = '';
     this.ratedMoviesService.suggestions = [];
     this.sideMenu.userInfo = this.sessionService.getSession();
